@@ -21,6 +21,10 @@
 #include "asus_ois.h"
 #endif
 
+#ifdef CONFIG_UCI
+#include <linux/notification/notification.h>
+#endif
+
 
 static int cam_sensor_update_req_mgr(
 	struct cam_sensor_ctrl_t *s_ctrl,
@@ -1028,6 +1032,9 @@ int32_t cam_sensor_driver_cmd(struct cam_sensor_ctrl_t *s_ctrl,
 			s_ctrl->sensor_name,
 			s_ctrl->sensordata->slave_info.sensor_id,
 			s_ctrl->sensordata->slave_info.sensor_slave_addr);
+#ifdef CONFIG_UCI
+		ntf_camera_started();
+#endif
 	}
 		break;
 	case CAM_RELEASE_DEV: {
@@ -1090,6 +1097,9 @@ int32_t cam_sensor_driver_cmd(struct cam_sensor_ctrl_t *s_ctrl,
 		s_ctrl->streamon_count = 0;
 		s_ctrl->streamoff_count = 0;
 		s_ctrl->last_flush_req = 0;
+#ifdef CONFIG_UCI
+		ntf_camera_stopped();
+#endif
 	}
 		break;
 	case CAM_QUERY_CAP: {
